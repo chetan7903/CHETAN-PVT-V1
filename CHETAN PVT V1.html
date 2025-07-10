@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Prediction System - chetan pvt v1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { background: #000; color: #0f0; font: 16px 'Segoe UI', sans-serif; text-align: center; padding: 30px; }
+    .box { display: inline-block; border: 2px solid #0f0; padding: 25px; border-radius: 12px; background: #111; box-shadow: 0 0 15px #0f0; }
+    input { width: 50px; background: #000; color: #0f0; border: 1px solid #0f0; padding: 8px; margin: 5px; text-align: center; font-size: 18px; border-radius: 5px; }
+    button { background: #0f0; color: #000; padding: 10px 22px; font-size: 18px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+    button:hover { background: #0a0; }
+    .r { margin-top: 20px; font-size: 18px; }
+    .h { color: #ff0; font-weight: bold; }
+    .footer { margin-top: 25px; font-size: 14px; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Prediction System</h1>
+    <p>Enter Last 5 Numbers:</p>
+    <div>
+      <input id="n1" type="number" min="0" max="9">
+      <input id="n2" type="number" min="0" max="9">
+      <input id="n3" type="number" min="0" max="9">
+      <input id="n4" type="number" min="0" max="9">
+      <input id="n5" type="number" min="0" max="9">
+    </div>
+    <button onclick="predict()">Auto Predict 🔮</button>
+    <div id="out" class="r"></div>
+  </div>
+
+  <script>
+    function predict() {
+      let a = [];
+      for (let i = 1; i <= 5; i++) {
+        let val = parseInt(document.getElementById('n' + i).value);
+        if (isNaN(val)) {
+          alert("Please enter all 5 numbers");
+          return;
+        }
+        a.push(val);
+      }
+
+      let sum = a.reduce((x, y) => x + y, 0);
+      let avg = Math.floor(sum / 5);
+      let freq = {};
+      a.forEach(n => freq[n] = (freq[n] || 0) + 1);
+      let maxfreq = Object.entries(freq).sort((p, q) => q[1] - p[1]).map(p => +p[0]).slice(0, 2);
+      let sorted = [...a].sort((x, y) => x - y);
+      let low2 = sorted[0], high2 = sorted[4];
+
+      let big = [ (high2 + avg) % 10, (high2 + maxfreq[0]) % 10 ];
+      let small = [ (low2 + avg) % 10, (low2 + maxfreq[1]) % 10 ];
+      let star = (big[0] + small[1]) % 10;
+
+      document.getElementById('out').innerHTML = `
+        <p><span class="h">Big:</span> ${big.join(', ')}</p>
+        <p><span class="h">Small:</span> ${small.join(', ')}</p>
+        <p><span class="h">⭐ Star:</span> ${star}</p>
+      `;
+    }
+  </script>
+
+  <div class="footer">© 2025 chetan pvt v1 | Predictor</div>
+</body>
+</html>
